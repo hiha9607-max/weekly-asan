@@ -1,6 +1,8 @@
 import IssueViewer from "@/components/issue-viewer";
-import { getIssues } from "@/lib/issues";
+import { loadIssues } from "@/lib/load-issues";
 
 export default function Home() {
-  return <IssueViewer initialIssues={getIssues()} />;
+  const issues = loadIssues();
+
+  return <IssueViewer initialIssues={issues} />;
 }
