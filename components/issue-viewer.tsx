@@ -7,6 +7,13 @@ import CardSlider from "./card-slider";
 import FirstUseGuide from "./first-use-guide";
 import IssueSelector from "./issue-selector";
 
+const LANGUAGE_LABELS: Record<string, string> = {
+  en: "English",
+  zh: "中文",
+  ru: "Русский",
+  vi: "Tiếng Việt",
+};
+
 export default function IssueViewer({
   initialIssues,
 }: {
@@ -16,6 +23,7 @@ export default function IssueViewer({
   const [cardIndex, setCardIndex] = useState(0);
   const [selectorOpen, setSelectorOpen] = useState(false);
   const [guideVisible, setGuideVisible] = useState(false);
+  const [openLanguage, setOpenLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     setGuideVisible(
@@ -30,6 +38,13 @@ export default function IssueViewer({
     [initialIssues, issueId]
   );
 
+  const card = issue?.cards[cardIndex];
+  const audioTracks = card?.audios ?? [];
+
+  useEffect(() => {
+    setOpenLanguage(null);
+  }, [issueId, cardIndex]);
+
   if (!issue) {
     return (
       <main className="empty-state">
@@ -38,8 +53,6 @@ export default function IssueViewer({
     );
   }
 
-  const card = issue.cards[cardIndex];
-  const audioTracks = card?.audios ?? [];
   const stopToken = `${issue.id}-${card?.id ?? "none"}`;
 
   const dismissGuide = () => {
@@ -96,15 +109,42 @@ export default function IssueViewer({
         />
       </section>
 
-      <section className="audio-list">
-        {audioTracks.map((track) => (
-          <AudioPlayer
-            key={track.languageCode}
-            track={track}
-            pageNumber={cardIndex + 1}
-            stopToken={`${stopToken}-${track.languageCode}`}
-          />
-        ))}
+      <section className="audio-accordion">
+        {audioTracks.map((track) => {
+          const isOpen = openLanguage === track.languageCode;
+
+          const label =
+            LANGUAGE_LABELS[track.languageCode] ??
+            track.languageName;
+
+          return (
+            <div
+              className="audio-accordion-item"
+              key={track.languageCode}
+            >
+              <button
+                type="button"
+                className="audio-language-button"
+                onClick={() =>
+                  setOpenLanguage(
+                    isOpen ? null : track.languageCode
+                  )
+                }
+              >
+                <span>🎧 {label}</span>
+                <span>{isOpen ? "▲" : "▼"}</span>
+              </button>
+
+              {isOpen && (
+                <AudioPlayer
+                  track={track}
+                  pageNumber={cardIndex + 1}
+                  stopToken={`${stopToken}-${track.languageCode}`}
+                />
+              )}
+            </div>
+          );
+        })}
       </section>
 
       <IssueSelector

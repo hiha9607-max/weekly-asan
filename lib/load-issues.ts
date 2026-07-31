@@ -27,12 +27,16 @@ const AUDIO_EXTENSIONS = [
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
   zh: "中文",
-  vi: "Tiếng Việt",
   ru: "Русский",
-  uz: "Oʻzbekcha",
-  kk: "Қазақша",
-  ko: "한국어",
+  vi: "Tiếng Việt",
 };
+
+const LANGUAGE_ORDER = [
+  "en",
+  "zh",
+  "ru",
+  "vi",
+];
 
 function isDateFolder(folderName: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(folderName);
@@ -53,6 +57,14 @@ function getFileExtension(fileName: string): string {
     .extname(fileName)
     .replace(".", "")
     .toLowerCase();
+}
+
+function getLanguageOrder(languageCode: string): number {
+  const index = LANGUAGE_ORDER.indexOf(languageCode);
+
+  return index === -1
+    ? LANGUAGE_ORDER.length
+    : index;
 }
 
 function findCardImages(files: string[]) {
@@ -113,6 +125,10 @@ function findCardAudios(
         return null;
       }
 
+      if (!LANGUAGE_ORDER.includes(languageCode)) {
+        return null;
+      }
+
       return {
         fileName,
         languageCode,
@@ -128,11 +144,14 @@ function findCardAudios(
     )
     .map(({ fileName, languageCode }) => ({
       languageCode,
-      languageName:
-        LANGUAGE_NAMES[languageCode] ??
-        languageCode.toUpperCase(),
+      languageName: LANGUAGE_NAMES[languageCode],
       fileName,
-    }));
+    }))
+    .sort(
+      (a, b) =>
+        getLanguageOrder(a.languageCode) -
+        getLanguageOrder(b.languageCode)
+    );
 }
 
 export function loadIssues(): Issue[] {
