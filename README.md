@@ -1,4 +1,4 @@
-# 아산톡톡 English Audio 시제품
+# 위클리아산 English Audio 시제품
 
 QR로 접속해 카드뉴스를 넘기고, 카드별 영어 음성을 재생하는 Next.js 웹앱입니다.
 
@@ -32,7 +32,7 @@ imageUrl: "/content/2026-08-05/card-1.jpg"
 audioUrl: "/content/2026-08-05/card-1-en.mp3"
 ```
 
-## 3. 새 아산톡톡 추가
+## 3. 새 위클리아산 추가
 
 1. `public/content/새날짜/` 폴더 생성
 2. 이미지와 음성 파일 복사

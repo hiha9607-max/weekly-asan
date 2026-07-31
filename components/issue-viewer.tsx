@@ -39,9 +39,7 @@ export default function IssueViewer({
   }
 
   const card = issue.cards[cardIndex];
-  const englishTrack = card?.audios.find(
-    (audio) => audio.languageCode === "en"
-  );
+  const audioTracks = card?.audios ?? [];
   const stopToken = `${issue.id}-${card?.id ?? "none"}`;
 
   const dismissGuide = () => {
@@ -57,7 +55,7 @@ export default function IssueViewer({
       <header className="topbar">
         <div>
           <span className="brand">위클리아산</span>
-          <span className="language-label">English Audio</span>
+          <span className="language-label">Multilingual Audio</span>
         </div>
 
         <button
@@ -98,11 +96,16 @@ export default function IssueViewer({
         />
       </section>
 
-      <AudioPlayer
-        track={englishTrack}
-        pageNumber={cardIndex + 1}
-        stopToken={stopToken}
-      />
+      <section className="audio-list">
+        {audioTracks.map((track) => (
+          <AudioPlayer
+            key={track.languageCode}
+            track={track}
+            pageNumber={cardIndex + 1}
+            stopToken={`${stopToken}-${track.languageCode}`}
+          />
+        ))}
+      </section>
 
       <IssueSelector
         open={selectorOpen}

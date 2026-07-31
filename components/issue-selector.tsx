@@ -15,10 +15,10 @@ export default function IssueSelector({ open, issues, selectedId, onClose, onSel
 
   return (
     <div className="sheet-backdrop" role="presentation" onClick={onClose}>
-      <section className="sheet" role="dialog" aria-modal="true" aria-label="지난 아산톡톡 선택" onClick={(e) => e.stopPropagation()}>
+      <section className="sheet" role="dialog" aria-modal="true" aria-label="지난 위클리아산 선택" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
         <div className="sheet-title-row">
-          <h2>지난 아산톡톡</h2>
+          <h2>지난 위클리아산</h2>
           <button className="icon-button" type="button" onClick={onClose} aria-label="닫기">×</button>
         </div>
         <div className="issue-list">
